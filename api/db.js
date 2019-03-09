@@ -1,3 +1,3 @@
 module.exports = {
-    DB: 'mongodb://localhost:27017/crud-mean'
+    DB: 'mongodb://localhost:27017/ng7crud'
  };
