@@ -16,12 +16,7 @@ export interface VmConfiguration {
 })
 export class SelectionComponent implements OnInit {
 
-  foods: VmConfiguration[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
-
+selected='option2';
 
   constructor() { }
 
