@@ -44,8 +44,10 @@ vmRoutes.route('/update/:id').post(function (req, res) {
       return next(new Error('Could not load Document'));
     else {
         vm.vm_name = req.body.vm_name;
+        vm.vm_cores=req.body.vm_cores;
         vm.vm_RAM = req.body.vm_RAM;
-        vm.vm_File = req.body.vm_File;
+        vm.vm_Storage = req.body.vm_Storage;
+        vm.vm_Price=req.body.vm_Price;
 
         vm.save().then(vm => {
           res.json('Update complete');

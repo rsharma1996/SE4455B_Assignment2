@@ -1,19 +1,25 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // Define collection and schema for Business
-let VM = new Schema({
+var VM = new Schema({
   vm_name: {
     type: String
+  },
+  vm_cores:{
+    type: Number
   },
   vm_RAM: {
     type: String
   },
-  vm_File: {
+  vm_Storage: {
     type: String
+  },
+  vm_Price:{
+    type:Number
   }
 },{
-    collection: 'vm_type'
+    collection: 'vms'
 });
   
 
