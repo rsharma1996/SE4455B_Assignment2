@@ -1,19 +1,17 @@
+
 <div>
-  
-  NPM Start
-  
+  <p>VM Start</p><button mat-button>Start</button>
+  <p>VM Stop</p><button mat-button>Stop</button>
   
 </div>
 
 
-
+<h4>Basic native select</h4>
 <mat-form-field>
-  <mat-select [(value)]="selected">
-    <mat-option>None</mat-option>
-    <mat-option value="Basic Virtual Server Instance">Basic Virtual Server Instance</mat-option>
-    <mat-option value="Large Virtual Server Instance">Large Virtual Server Instance</mat-option>
-    <mat-option value="Ultra-Large Virtual Server Instance">Ultra-Large Virtual Server Instance</mat-option>
-  </mat-select>
+  <select matNativeControl required>
+    <option value="Basic Virtual Server Instance">Basic Virtual Server Instance</option>
+    <option value="Large Virtual Server Instance">Large Virtual Server Instance</option>
+    <option value="Ultra-Large Virtual Server Instance">Ultra-Large Virtual Server Instance</option>
+  
+  </select>
 </mat-form-field>
-
-<p>You selected: {{selected}}</p>
