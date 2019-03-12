@@ -3,7 +3,7 @@ const app = express();
 const vmRoutes = express.Router();
 
 // Require Business model in our routes module
-let VM = require('../models/vm');
+let VM = require('../models/vm.js');
 
 // Defined store route
 vmRoutes.route('/add').post(function (req, res) {
@@ -13,7 +13,7 @@ vmRoutes.route('/add').post(function (req, res) {
       res.status(200).json({'vm': 'vm added successfully'});
     })
     .catch(err => {
-    res.status(400).send("unable to save to database");
+      res.status(400).send("unable to save to database");
     });
 });
 
@@ -24,6 +24,7 @@ vmRoutes.route('/').get(function (req, res) {
       console.log(err);
     }
     else {
+      console.log("request reached this endpoint");
       res.json(vms);
     }
   });
