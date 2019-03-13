@@ -16,6 +16,9 @@ export interface VMOptions {
   ram: number;
   storage: string;
   price:Number;
+  status:String;
+  t1:Number;
+  t2:Number;
 }
 
 const ELEMENT_DATA: VMOptions[] = [];
@@ -30,10 +33,12 @@ const ELEMENT_DATA: VMOptions[] = [];
 export class SelectionComponent implements OnInit {
 
 selected='Large Virtual Server Instance';
+totalCost =0;
 
-  displayedColumns: string[] = ['name', 'cores', 'ram', 'storage', 'price'];
+  displayedColumns: string[] = ['delete', 'name', 'cores', 'ram', 'storage', 'price','cost','play','stop','status'];
   dataSource = new MatTableDataSource<VMOptions>(ELEMENT_DATA);
   listOfVMs :VMOptions[] = [];
+  time = 0;
 
   
   constructor(private http : HttpClient) { }
@@ -46,34 +51,68 @@ selected='Large Virtual Server Instance';
   getVMS(){
     //make HTTP Get request to backend server and return all of the current VMS
     this.http.get('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms').subscribe(data=>{
-     console.log(data);
-    
+    var myArr: any = data;
      
-    // for(var i = 0; i< data.length; i++){
-    //   console.log(data[i]);
-    // }
-     //console.log(data.vms);
-    // for(var x in data.vms){
-    //   this.listOfVMs.push(x);
-    // }
-    // var arr = Object.keys(data).map(key => ({type: key, value: data[key]}));
-    
-    // console.log(arr);
-    // for(var x in arr){
-    // this.listOfVMs.push(arr[x].value);
-    // }
+    for(var i = 0; i< myArr.length; i++){
+      if(myArr[i].vm_name != undefined){
+        this.listOfVMs.push(myArr[i]);
+      }
+    }
    
-     console.log("thisislist of vms");
-     console.log(this.listOfVMs);
-     //the data is then added to the table
      this.dataSource = new MatTableDataSource<VMOptions>(this.listOfVMs);
    });
   }
   
-  createVM(form: any){
+  startVM(x){
+    if(x.vm_Status == "Inactive"){
+      x.vm_Status = "Active";
+    var d = new Date();
+    x.t1 = d.getTime();
+    //could change to make request to backend to change t1 if have time
+    }
+  }
+  stopVM(x){
+    console.log(x);
+    if(x.vm_Status == "Active"){
+      x.vm_Status = "Inactive"
+      var d = new Date();
+      x.t2 = d.getTime();
+      console.log(x.t2-x.t1);
+      var tdiff = (x.t2-x.t1)/60000;
+      //gets tdiff in minutes
+     
+      x.vm_Cost +=  x.vm_Price*tdiff;
+      this.totalCost += x.vm_Price*tdiff;
+  
+    }
+  }
+  deleteVM(x){
+    var id = x._id;
+    const url = `https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms/${id}`;
+    this.http.delete(url).subscribe(data=>{
+      console.log(data);
+    });
+  }
+  
+  addVM(x){
+    this.listOfVMs = [];
+    console.log(x);
     const heads: HttpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-    this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify(this.user),{headers: heads}).subscribe(data =>{
+    if(x=="Large Virtual Server Instance"){
+      this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Large VSI", vm_cores: 32, vm_RAM: 64, vm_Storage: 20, vm_Price:.10, vm_Cost: 0,vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
     console.log(data);
   });
+    }
+    else if(x =="Ultra-Large Virtual Server Instance"){
+      this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Ultra-Large VSI", vm_cores: 128, vm_RAM: 512, vm_Storage: 40, vm_Price:.15, vm_Cost: 0, vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
+    console.log(data);
+  });
+    }
+    else{
+      this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Basic VSI", vm_cores: 8, vm_RAM: 16, vm_Storage: 20, vm_Price:.05, vm_Cost: 0, vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
+    console.log(data);
+  });
+    }
+    this.getVMS();
   }
 }

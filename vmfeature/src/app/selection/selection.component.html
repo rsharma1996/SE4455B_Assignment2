@@ -11,7 +11,7 @@
   </mat-select>
 </mat-form-field>
 <p>You selected: {{selected}}</p>
-<button mat-raised-button color="primary"> Create VM</button>
+<button mat-raised-button (click)="addVM(selected)" color="primary"> Create VM</button>
 </mat-card>
 
 
@@ -20,44 +20,70 @@
  
  <div>
  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+   
+   <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef> Delete </th>
+    <td mat-cell *matCellDef="let element">
+       <button mat-icon-button color="warn" (click)="deleteVM(element)">Delete</button>
+    </td>
+  </ng-container>
 
    Name Column 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
-    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.vm_name}} </td>
   </ng-container>
 
-   Name Column 
+   Cores Column 
   <ng-container matColumnDef="cores">
     <th mat-header-cell *matHeaderCellDef> Cores </th>
-    <td mat-cell *matCellDef="let element"> {{element.cores}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.vm_cores}} </td>
   </ng-container>
 
-   Weight Column 
+   Ram Column 
   <ng-container matColumnDef="ram">
     <th mat-header-cell *matHeaderCellDef> Ram </th>
-    <td mat-cell *matCellDef="let element"> {{element.ram}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.vm_RAM}} </td>
   </ng-container>
 
-   Symbol Column 
+   Storage Column 
   <ng-container matColumnDef="storage">
     <th mat-header-cell *matHeaderCellDef> Storage </th>
-    <td mat-cell *matCellDef="let element"> {{element.storage}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.vm_Storage}} </td>
   </ng-container>
   
-   Symbol Column 
+   Price Column 
   <ng-container matColumnDef="price">
     <th mat-header-cell *matHeaderCellDef> Price </th>
-    <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.vm_Price}} </td>
+  </ng-container>
+  <ng-container matColumnDef="cost">
+    <th mat-header-cell *matHeaderCellDef> Acc. Cost </th>
+    <td mat-cell *matCellDef="let element"> {{element.vm_Cost}} </td>
   </ng-container>
   
-  <ng-container matColumnDef="button">
-    <th mat-header-cell *matHeaderCellDef> Running </th>
-    <td mat-cell *matCellDef="let element">  </td>
+  <ng-container matColumnDef="play">
+    <th mat-header-cell *matHeaderCellDef> Start </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="startVM(element)">Start</button>
+    </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="stop">
+    <th mat-header-cell *matHeaderCellDef> Stop </th>
+    <td mat-cell *matCellDef="let element">
+       <button mat-icon-button (click)="stopVM(element)">Stop</button>
+    </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let element"> {{element.vm_Status}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+Total Costs: {{totalCost}}
 </div>
  

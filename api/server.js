@@ -17,10 +17,8 @@ const express = require('express'),
 
     app.use(bodyParser.json());
     app.use(cors());
-    const port = process.env.PORT || 8081;
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ROUTES FOR OUR API
-// =============================================================================
+    const port = 8081;
+
 var router = express.Router();              // get an instance of the express Router
 
 router.use(function(req, res, next) {
@@ -29,16 +27,16 @@ router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+//base route
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    res.json({ message: 'base route' });   
 });
 
-// more routes for our API will happen here
+// the vms routes
 
 router.route('/vms')
 
-    // create a vm (accessed at POST http://localhost:8081/api/vms)
+    // create a vm at http://localhost:8081/api/vms)
     .post(function(req, res) {
         console.log("POST request received");
         console.log(req.body);
@@ -47,20 +45,24 @@ router.route('/vms')
         // console.log(req.body.ram);
         var newVM = new VM();   
         //add all of the VM fields to be stored
-        newVM.vm_name = req.body.name;
-        newVM.vm_cores = req.body.cores;
-        newVM.vm_RAM = req.body.ram;
-        newVM.vm_Storage = req.body.storage;
-        newVM.vm_Price = req.body.price;
+        newVM.vm_name = req.body.vm_name;
+        newVM.vm_cores = req.body.vm_cores;
+        newVM.vm_RAM = req.body.vm_RAM;
+        newVM.vm_Storage = req.body.vm_Storage;
+        newVM.vm_Price = req.body.vm_Price;
+        newVM.vm_Cost = req.body.vm_Cost
+        newVM.vm_Status = req.body.vm_Status;
+        newVM.t1 = 0;
+        newVM.t2 = 0;
 
-        // save the bear and check for errors
+        // save the new VM
         newVM.save(function(err) {
             if (err){
                 res.send(err);
             }
             console.log("created new VM");
 
-            res.json({ message: 'vm created!' });
+            res.json({ msg: 'vm created!' });
         });
 
     })
@@ -77,60 +79,25 @@ router.route('/vms')
         });
     });
     
-    //CODE FOR MANIPULATION BY ID
-    // router.route('/bears/:bear_id')
+    //routes for manipulating a vm by id
+    router.route('/vms/:_id')
 
-    // // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
-    // .get(function(req, res) {
-    //     Bear.findById(req.params.bear_id, function(err, bear) {
-    //         if (err){
-    //             res.send(err);
-    //         }
-    //         res.json(bear);
-    //     });
-    // })
-    // .put(function(req, res) {
+    
+    // delete the vm 
+    .delete(function(req, res) {
+        VM.remove({
+            _id: req.params._id
+        }, function(err, vm) {
+            if (err){
+                res.send(err);
+            }
+            res.json({ msg: 'Successfully deleted vm' });
+        });
+    });
 
-    //     // use our bear model to find the bear we want
-    //     Bear.findById(req.params.bear_id, function(err, bear) {
-
-    //         if (err){
-    //             res.send(err);
-    //         }
-
-    //         bear.name = req.body.name;  // update the bears info
-
-    //         // save the bear
-    //         bear.save(function(err) {
-    //             if (err){
-    //                 res.send(err);
-    //             }
-
-    //             res.json({ message: 'Bear updated!' });
-    //         });
-
-    //     });
-    // })
-    // // delete the bear with this id (accessed at DELETE http://localhost:8080/api/bears/:bear_id)
-    // .delete(function(req, res) {
-    //     Bear.remove({
-    //         _id: req.params.bear_id
-    //     }, function(err, bear) {
-    //         if (err){
-    //             res.send(err);
-    //         }
-    //         res.json({ message: 'Successfully deleted' });
-    //     });
-    // });
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
+// all of the routes will be prefixed with /api
 app.use('/api', router);
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//     app.get('/', (req, res) => {
-//         console.log("did this work?");
-//   return res.send('Received a GET HTTP method');
-// });
+
 
     //app.use('/api', routes);
     const server = app.listen(port, function(){
