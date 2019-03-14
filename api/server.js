@@ -39,7 +39,7 @@ router.route('/vms')
     // create a vm at http://localhost:8081/api/vms)
     .post(function(req, res) {
         console.log("POST request received");
-        console.log(req.body);
+        
         // console.log(req.body.name);
         // console.log(req.body.cores);
         // console.log(req.body.ram);

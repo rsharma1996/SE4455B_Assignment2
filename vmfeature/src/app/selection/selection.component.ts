@@ -82,15 +82,20 @@ totalCost =0;
       //gets tdiff in minutes
      
       x.vm_Cost +=  x.vm_Price*tdiff;
+      //now want to store accumulated cost in the vm
       this.totalCost += x.vm_Price*tdiff;
+      var id = x._id;
+
   
     }
   }
   deleteVM(x){
+    this.listOfVMs = [];
     var id = x._id;
     const url = `https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms/${id}`;
     this.http.delete(url).subscribe(data=>{
       console.log(data);
+      this.getVMS();
     });
   }
   
@@ -100,19 +105,25 @@ totalCost =0;
     const heads: HttpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
     if(x=="Large Virtual Server Instance"){
       this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Large VSI", vm_cores: 32, vm_RAM: 64, vm_Storage: 20, vm_Price:.10, vm_Cost: 0,vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
-    console.log(data);
+    //console.log(data);
+    this.getVMS();
   });
     }
     else if(x =="Ultra-Large Virtual Server Instance"){
       this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Ultra-Large VSI", vm_cores: 128, vm_RAM: 512, vm_Storage: 40, vm_Price:.15, vm_Cost: 0, vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
-    console.log(data);
+    //console.log(data);
+    this.getVMS();
+  });
+    }
+    else if(x == "Basic Virtual Server Instance"){
+      this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Basic VSI", vm_cores: 8, vm_RAM: 16, vm_Storage: 20, vm_Price:.05, vm_Cost: 0, vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
+    //console.log(data);
+    this.getVMS();
   });
     }
     else{
-      this.http.post('https://rshar59-virtualbuds-assignment2-rshar59.c9users.io:8081/api/vms',JSON.stringify({vm_name: "Basic VSI", vm_cores: 8, vm_RAM: 16, vm_Storage: 20, vm_Price:.05, vm_Cost: 0, vm_Status: "Inactive" }),{headers: heads}).subscribe(data =>{
-    console.log(data);
-  });
+      
     }
-    this.getVMS();
+    
   }
 }
